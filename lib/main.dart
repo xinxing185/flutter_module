@@ -155,6 +155,15 @@ class PortInfoPage extends StatefulWidget {
 }
 
 class _PortInfoPageState extends State<PortInfoPage> {
+  Future<void> _handleBackPressed() async {
+    final NavigatorState navigator = Navigator.of(context);
+    if (navigator.canPop()) {
+      navigator.pop();
+      return;
+    }
+    await BoostNavigator.instance.pop();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -164,7 +173,13 @@ class _PortInfoPageState extends State<PortInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Flutter Boost Module')),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: _handleBackPressed,
+        ),
+        title: const Text('Flutter Boost Module'),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -207,6 +222,15 @@ class PortSettingsPage extends StatefulWidget {
 class _PortSettingsPageState extends State<PortSettingsPage> {
   late bool _enableNotification;
 
+  Future<void> _handleBackPressed() async {
+    final NavigatorState navigator = Navigator.of(context);
+    if (navigator.canPop()) {
+      navigator.pop();
+      return;
+    }
+    await BoostNavigator.instance.pop();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -217,7 +241,13 @@ class _PortSettingsPageState extends State<PortSettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Port Settings')),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios),
+          onPressed: _handleBackPressed,
+        ),
+        title: const Text('Port Settings'),
+      ),
       body: SwitchListTile(
         title: const Text('Enable Notification'),
         value: _enableNotification,
