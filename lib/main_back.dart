@@ -68,7 +68,7 @@ class _MyAppState extends State<MyApp> {
             // Map<String, dynamic> map = settings.arguments as Map<String, dynamic> ;
             // String data = map['data'] as String;
             return MainPage(
-              data: "data11",
+              data: "data112",
             );
           });
     },
@@ -76,10 +76,10 @@ class _MyAppState extends State<MyApp> {
       return MaterialPageRoute(
           settings: settings,
           builder: (_) {
-            // Map<String, dynamic> map = settings.arguments as Map<String, dynamic> ;
-            // String data = map['data'] as String;
+            Map<String, dynamic> map = settings.arguments as Map<String, dynamic> ;
+            String data = map['data'] as String;
             return MainPage(
-              data: "data12",
+              data: data,
             );
           });
     },

@@ -5,9 +5,7 @@ import 'package:flutter_boost/flutter_boost.dart';
 import 'core/app_lifecycle_observer.dart';
 
 /// flutter_boost 要求使用自定义 Binding 管理容器生命周期。
-class CustomFlutterBinding extends WidgetsFlutterBinding
-    with
-        BoostFlutterBinding {}
+class CustomFlutterBinding extends WidgetsFlutterBinding with BoostFlutterBinding {}
 
 class AppRoutes {
   static const String root = '/';
@@ -64,48 +62,28 @@ class NativeBridge {
 }
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
   PageVisibilityBinding.instance.addGlobalObserver(AppLifecycleObserver());
   CustomFlutterBinding();
   await NativeBridge.init();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
-  Route<dynamic>? _routeFactory(
-    RouteSettings settings,
-    bool isContainerPage,
-    String? uniqueId,
-  ) {
-    final Object? args = settings.arguments;
-    final Map<String, dynamic> params =
-        args is Map ? Map<String, dynamic>.from(args) : <String, dynamic>{};
+  @override
+  _MyAppState createState() => _MyAppState();
+}
 
-    switch (settings.name) {
-      case AppRoutes.root:
-      case AppRoutes.portInfo:
-        return MaterialPageRoute<void>(
-          settings: settings,
-          builder: (_) => PortInfoPage(
-            source: params['source'] as String? ?? 'native',
-          ),
-        );
-      case AppRoutes.portSettings:
-        return MaterialPageRoute<void>(
-          settings: settings,
-          builder: (_) => PortSettingsPage(
-            enableNotification:
-                params['enableNotification'] as bool? ?? false,
-          ),
-        );
-      default:
-        return MaterialPageRoute<void>(
-          settings: settings,
-          builder: (_) => UnknownRoutePage(routeName: settings.name ?? ''),
-        );
+class _MyAppState extends State<MyApp> {
+  Route<dynamic>? _routeFactory(RouteSettings settings, bool isContainerPage, String? uniqueId) {
+    FlutterBoostRouteFactory? func = routerMap[settings.name];
+    if (func == null) {
+      FlutterBoostRouteFactory defaultFun = routerMap[AppRoutes.root]!;
+      return defaultFun(settings, isContainerPage, uniqueId);
     }
+    return func(settings, isContainerPage, uniqueId);
   }
 
   Widget _appBuilder(Widget home) {
@@ -124,6 +102,47 @@ class MyApp extends StatelessWidget {
       initialRoute: AppRoutes.portInfo,
     );
   }
+
+  Map<String, FlutterBoostRouteFactory> routerMap = {
+    '/': (settings, isContainerPage, uniqueId) {
+      return MaterialPageRoute(
+          settings: settings,
+          builder: (_) {
+            // Map<String, dynamic> map = settings.arguments as Map<String, dynamic> ;
+            // String data = map['data'] as String;
+            return UnknownRoutePage(routeName: settings.name ?? '');
+          });
+    },
+    AppRoutes.portInfo: (settings, isContainerPage, uniqueId) {
+      return MaterialPageRoute(
+          settings: settings,
+          builder: (_) {
+            // Map<String, dynamic> map = settings.arguments as Map<String, dynamic> ;
+            // String data = map['data'] as String;
+
+            final Object? args = settings.arguments;
+            final Map<String, dynamic> params = args is Map ? Map<String, dynamic>.from(args) : <String, dynamic>{};
+            return PortInfoPage(
+              source: params['source'] as String? ?? 'native',
+            );
+          });
+    },
+    AppRoutes.portSettings: (settings, isContainerPage, uniqueId) {
+      return MaterialPageRoute(
+          settings: settings,
+          builder: (_) {
+            // Map<String, dynamic> map = settings.arguments as Map<String, dynamic>;
+            // String data = map['data'] as String;
+
+            final Object? args = settings.arguments;
+            final Map<String, dynamic> params = args is Map ? Map<String, dynamic>.from(args) : <String, dynamic>{};
+            return PortSettingsPage(
+              enableNotification:
+              params['enableNotification'] as bool? ?? false,
+            );
+          });
+    },
+  };
 }
 
 class PortInfoPage extends StatefulWidget {
