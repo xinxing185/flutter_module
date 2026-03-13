@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_boost/flutter_boost.dart';
+import 'package:flutter_module/plugin/SystemUtil.dart';
 import 'package:flutter_module/widget/custom_switch.dart';
 
 import 'core/app_lifecycle_observer.dart';
@@ -75,10 +76,10 @@ class _MyAppState extends State<MyApp> {
       return MaterialPageRoute(
           settings: settings,
           builder: (_) {
-            // Map<String, dynamic> map = settings.arguments as Map<String, dynamic> ;
-            // String data = map['data'] as String;
+            Map<String, dynamic> map = settings.arguments as Map<String, dynamic> ;
+            String data = map['data'] as String;
             return MainPage(
-              data: "data12",
+              data: data,
             );
           });
     },
@@ -183,6 +184,15 @@ class MainPage extends StatelessWidget {
                   TextButton(onPressed: () {
                     AppNavigator.pushReplacement("simplePage");
                   }, child: Text('Jump')),
+                  TextButton(onPressed: () {
+                    // AppNavigator.pushNative("test");
+                    Future<String> s = SystemUtils.getTestData();
+                    s.then((value) {
+                      print(value);
+                    }).catchError((error) {
+                      print("发生错误: $error");
+                    });
+                  }, child: Text('Jump Native')),
                   TextButton(onPressed: () {
                     _setImmersiveStatusBar();
                   }, child: Text('Change')),

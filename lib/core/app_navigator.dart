@@ -2,11 +2,19 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_boost/flutter_boost.dart';
 
 /**
- * @author liu.xinyi
- * @time 2022/1/19 11:27
+ * @author zhangxinxing
  * @desc  全局导航
  */
 class AppNavigator{
+  /**
+   * 打开新的页面
+   */
+  static Future<T?> pushNative<T extends Object?>(
+      String routeName, {
+        Map<String, dynamic>? arguments,
+      }) {
+    return BoostNavigator.instance.push(routeName, arguments: arguments);
+  }
   /**
    * 打开新的页面
    */
