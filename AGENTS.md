@@ -1,13 +1,3 @@
-## Git workflow
+## tips
 
-Before making any code changes:
-
-1. Update main branch
-   git fetch origin
-   git checkout main
-   git pull origin main --ff-only
-
-2. Create a feature branch
-   git checkout -b codex/${task}
-
-3. Implement the change
+这个Flutter Module作为flutter module接入到Android 原生应用中，宿主App的相对路径为：../CloudApp, 原生module为module_flutter
