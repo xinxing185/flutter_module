@@ -9,6 +9,10 @@ import 'package:flutter_boost/flutter_boost.dart';
 
 ///全局生命周期监听示例
 class AppLifecycleObserver with GlobalPageVisibilityObserver {
+  AppLifecycleObserver({required this.onVisible});
+
+  final VoidCallback onVisible;
+
   @override
   void onBackground(Route route) {
     super.onBackground(route);
@@ -18,6 +22,7 @@ class AppLifecycleObserver with GlobalPageVisibilityObserver {
   @override
   void onForeground(Route route) {
     super.onForeground(route);
+    onVisible();
     print("AppLifecycleObserver ${route.settings.name} - onForground");
   }
 
@@ -42,6 +47,7 @@ class AppLifecycleObserver with GlobalPageVisibilityObserver {
   @override
   void onPageShow(Route route) {
     super.onPageShow(route);
+    onVisible();
     print("AppLifecycleObserver - ${route.settings.name}- onPageShow");
     void setImmersiveStatusBar() {
       print("setImmersiveStatusBar++++");

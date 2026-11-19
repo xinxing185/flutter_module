@@ -1,0 +1,19 @@
+{
+  "@@locale": "zh",
+  "feedbackTitle": "建议与反馈",
+  "feedbackRating": "给 Cudy APP 打分（5分制）",
+  "feedbackLabel": "问题反馈",
+  "feedbackHint": "您对我们有什么意见或建议",
+  "feedbackRemaining": "还可输入 {count} 字",
+  "feedbackAttachments": "上传图片/视频",
+  "feedbackAttachmentsHint": "上传图片或视频，帮助我们理解您的反馈。",
+  "feedbackPickMedia": "从相册添加图片或视频",
+  "feedbackRemoveMedia": "移除 {name}",
+  "feedbackMediaReadFailed": "无法读取所选媒体，请重试",
+  "feedbackGalleryUnavailable": "当前版本暂时无法打开相册",
+  "feedbackContact": "联系方式",
+  "feedbackContactHint": "输入您的联系方式",
+  "feedbackThanks": "感谢您的建议与反馈。我们会认真倾听您的建议，努力改进产品。",
+  "feedbackSubmit": "提交",
+  "feedbackSubmitted": "提交成功"
+}

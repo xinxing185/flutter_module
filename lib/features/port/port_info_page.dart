@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../app/app_router.dart';
 import '../../bridge/native_bridge.dart';
 import '../../core/app_navigator.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class PortInfoPage extends StatefulWidget {
   const PortInfoPage({super.key, required this.source});
@@ -32,6 +33,7 @@ class _PortInfoPageState extends State<PortInfoPage> {
           icon: const Icon(Icons.arrow_back_ios),
           onPressed: _handleBackPressed,
         ),
+        centerTitle: true,
         title: const Text('Flutter Boost Module'),
       ),
       body: Padding(
@@ -53,9 +55,17 @@ class _PortInfoPageState extends State<PortInfoPage> {
             const SizedBox(height: 8),
             ElevatedButton(
               onPressed: () {
-                AppNavigator.push(AppRoutes.unknown);
+                AppNavigator.pushWithContainer(AppRoutes.unknown);
               },
               child: const Text('Open Unknown Flutter Page'),
+            ),
+            const SizedBox(height: 8),
+            ElevatedButton(
+              onPressed: () => AppNavigator.push(AppRoutes.feedback),
+              child: Text(
+                AppLocalizations.of(context)?.feedbackTitle ??
+                    'Suggestions & Feedback',
+              ),
             ),
             const SizedBox(height: 8),
             ElevatedButton(

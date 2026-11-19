@@ -63,13 +63,11 @@ class AppNavigator {
     BuildContext context, {
     T? result,
   }) async {
-    final NavigatorState navigator = Navigator.of(context);
-    if (navigator.canPop()) {
-      navigator.pop<T>(result);
-      return;
+    // 和 FlutterBoost 的系统返回一样，先让当前路由决定是否消费返回。
+    final handled = await Navigator.of(context).maybePop<T>(result);
+    if (!handled) {
+      await popBoost<T>(result: result);
     }
-
-    await popBoost<T>(result: result);
   }
 
   static Future<bool> popBoost<T extends Object?>({T? result}) {

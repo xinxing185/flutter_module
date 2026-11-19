@@ -1,0 +1,33 @@
+{
+  "@@locale": "en",
+  "feedbackTitle": "Suggestions & Feedback",
+  "feedbackRating": "Rate the Cudy App (out of 5)",
+  "feedbackLabel": "Feedback",
+  "feedbackHint": "Share your feedback or suggestions",
+  "feedbackRemaining": "{count} characters remaining",
+  "@feedbackRemaining": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "feedbackAttachments": "Photos and videos",
+  "feedbackAttachmentsHint": "Add photos or videos to help us understand your feedback.",
+  "feedbackPickMedia": "Add photos or videos from the gallery",
+  "feedbackRemoveMedia": "Remove {name}",
+  "@feedbackRemoveMedia": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "feedbackMediaReadFailed": "Could not read the selected media. Please try again.",
+  "feedbackGalleryUnavailable": "The gallery is unavailable in this version.",
+  "feedbackContact": "Contact information",
+  "feedbackContactHint": "Enter your contact information",
+  "feedbackThanks": "Thank you for your feedback. Your suggestions help us improve.",
+  "feedbackSubmit": "Submit",
+  "feedbackSubmitted": "Submitted successfully"
+}

@@ -165,3 +165,6 @@ app.*.symbols
 
 # Obfuscation related
 app.*.map.json
+
+# Generated Flutter localizations
+/lib/l10n/generated/

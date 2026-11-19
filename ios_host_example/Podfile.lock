@@ -1,0 +1,43 @@
+PODS:
+  - CudyFlutter (0.1.0):
+    - Flutter
+    - flutter_boost
+  - Flutter (1.0.0)
+  - flutter_boost (0.0.2):
+    - Flutter
+  - FlutterPluginRegistrant (0.0.1):
+    - Flutter
+    - flutter_boost
+    - image_picker_ios
+  - image_picker_ios (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - CudyFlutter (from `CudyFlutter`)
+  - Flutter (from `../.ios/Flutter`)
+  - flutter_boost (from `../.ios/.symlinks/plugins/flutter_boost/ios`)
+  - FlutterPluginRegistrant (from `../.ios/Flutter/FlutterPluginRegistrant`)
+  - image_picker_ios (from `../.ios/.symlinks/plugins/image_picker_ios/ios`)
+
+EXTERNAL SOURCES:
+  CudyFlutter:
+    :path: CudyFlutter
+  Flutter:
+    :path: "../.ios/Flutter"
+  flutter_boost:
+    :path: "../.ios/.symlinks/plugins/flutter_boost/ios"
+  FlutterPluginRegistrant:
+    :path: "../.ios/Flutter/FlutterPluginRegistrant"
+  image_picker_ios:
+    :path: "../.ios/.symlinks/plugins/image_picker_ios/ios"
+
+SPEC CHECKSUMS:
+  CudyFlutter: 5ee822a34ef0bab2758ed6c2fc7ef04ebb6840ef
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  flutter_boost: 35d7aaeeba2a591a34841e776e2f76912efc85f1
+  FlutterPluginRegistrant: b6294f37ab4ca74db2f228a07fe32faba56ce7c2
+  image_picker_ios: e0ece4aa2a75771a7de3fa735d26d90817041326
+
+PODFILE CHECKSUM: a14609cfe026d11d8f1db5017b7a10501f061828
+
+COCOAPODS: 1.16.2

@@ -4,6 +4,13 @@ import 'package:flutter/services.dart';
 import '../app/app_router.dart';
 import '../core/app_navigator.dart';
 
+typedef HostUiConfig = ({
+  String localeTag,
+  double? fontScale,
+  bool highContrast,
+  String colorMode,
+});
+
 class NativeBridge {
   NativeBridge._();
 
@@ -14,6 +21,21 @@ class NativeBridge {
   static Future<void> init() {
     _channel.setMethodCallHandler(_handleNativeCall);
     return Future<void>.value();
+  }
+
+  static Future<HostUiConfig?> getHostUiConfig() async {
+    final config = await _channel.invokeMapMethod<String, Object?>(
+      'getHostUiConfig',
+    );
+    if (config == null) return null;
+
+    final scale = (config['fontScale'] as num?)?.toDouble();
+    return (
+      localeTag: config['localeTag'] as String,
+      fontScale: scale != null && scale.isFinite && scale > 0 ? scale : null,
+      highContrast: config['highContrast'] as bool,
+      colorMode: config['colorMode'] as String,
+    );
   }
 
   static Future<void> sendRouteReady(String route) async {

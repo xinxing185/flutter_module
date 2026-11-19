@@ -2,12 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_boost/flutter_boost.dart';
 
 import '../common/pages/unknown_route_page.dart';
+import '../core/device_page_params.dart';
+import '../features/feedback/feedback_page.dart';
 import '../features/port/port_info_page.dart';
 import '../features/port/port_settings_page.dart';
 
 class AppRoutes {
   static const String root = '/';
   static const String unknown = 'unknown';
+  static const String feedback = 'feedback';
   static const String portInfo = 'portInfo';
   static const String portSettings = 'portSettings';
 }
@@ -32,6 +35,9 @@ class AppRouter {
         (_) => UnknownRoutePage(routeName: settings.name ?? ''),
       );
     },
+    AppRoutes.feedback: (settings, isContainerPage, uniqueId) {
+      return _materialRoute(settings, (_) => const FeedbackPage());
+    },
     AppRoutes.portInfo: (settings, isContainerPage, uniqueId) {
       final Map<String, dynamic> params = _argumentsAsMap(settings.arguments);
       return _materialRoute(
@@ -44,6 +50,7 @@ class AppRouter {
       return _materialRoute(
         settings,
         (_) => PortSettingsPage(
+          device: DevicePageParams.fromRouteArguments(params),
           enableNotification: params['enableNotification'] as bool? ?? false,
         ),
       );
