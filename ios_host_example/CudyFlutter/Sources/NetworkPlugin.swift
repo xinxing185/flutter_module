@@ -16,9 +16,8 @@ final class NetworkPlugin {
             switch call.method {
             case "deviceRequest":
                 guard let device = args?["device"] as? [String: Any],
-                      let id = device["device_id"] as? String, Self.devices.contains(id),
-                      args?["method"] as? String == "mesh.get_clients" else {
-                    reply(FlutterError(code: "INVALID_ARGUMENT", message: "Expected mock device and system.info", details: nil))
+                      let id = device["device_id"] as? String, Self.devices.contains(id) else {
+                    reply(FlutterError(code: "INVALID_ARGUMENT", message: "Expected mock device", details: nil))
                     return
                 }
                 if failNext {

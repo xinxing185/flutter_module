@@ -21,11 +21,16 @@ class FeedbackPage extends StatefulWidget {
 
 class _FeedbackPageState extends State<FeedbackPage> {
   static const _feedbackLimit = 150;
-  static const _attachmentSize = 84.0;
+  static const _attachmentSize = 90.0;
   // 给删除按钮预留外沿，确保超出缩略图的区域也可以点击。
   static const _attachmentInset = EdgeInsets.only(top: 6, right: 6);
-  static const _fieldColor = Color(0xFFF2F4F8);
-  static const _mutedColor = Color(0xFF667085);
+  static const _foregroundColor = Color(0xFF222732);
+  static const _mutedColor = Color(0xFF888D98);
+  static const _captionColor = Color(0xFFA5ACBE);
+  static const _hintColor = Color(0xFFC9CDD4);
+  static const _controlSurface = Color(0xFFF5F6FA);
+  static const _selectedSurface = Color(0xFFD1E9FF);
+  static const _disabledSubmit = Color(0xFFA8D8FF);
   static const _borderRadius = BorderRadius.all(Radius.circular(12));
 
   final _feedbackController = TextEditingController();
@@ -36,10 +41,13 @@ class _FeedbackPageState extends State<FeedbackPage> {
   bool _loadingMedia = false;
 
   AppLocalizations get _strings => AppLocalizations.of(context)!;
-  Color get _primaryColor => Theme.of(context).colorScheme.primary;
+  Color get _actionColor => Theme.of(context).colorScheme.primary;
   bool get _highContrast => MediaQuery.highContrastOf(context);
-  Color get _secondaryColor =>
-      _highContrast ? const Color(0xFF202633) : _mutedColor;
+  Color get _secondaryColor => _highContrast ? _foregroundColor : _mutedColor;
+
+  BorderSide get _controlBorder => _highContrast
+      ? const BorderSide(color: _foregroundColor)
+      : BorderSide.none;
 
   @override
   void initState() {
@@ -131,38 +139,44 @@ class _FeedbackPageState extends State<FeedbackPage> {
   InputDecoration _inputDecoration(String hint) {
     return InputDecoration(
       hintText: hint,
-      hintStyle: TextStyle(color: _secondaryColor),
+      hintStyle: TextStyle(
+        color: _highContrast ? _foregroundColor : _hintColor,
+      ),
       filled: true,
-      fillColor: _fieldColor,
+      fillColor: _controlSurface,
       contentPadding: const EdgeInsets.all(14),
       enabledBorder: OutlineInputBorder(
         borderRadius: _borderRadius,
-        borderSide: _highContrast
-            ? BorderSide(color: _secondaryColor)
-            : BorderSide.none,
+        borderSide: _controlBorder,
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: _borderRadius,
-        borderSide: BorderSide(color: _primaryColor),
+        borderSide: BorderSide(color: _actionColor),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final heading = Theme.of(
-      context,
-    ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w600);
-    final caption = Theme.of(
-      context,
-    ).textTheme.bodySmall?.copyWith(color: _secondaryColor);
+    final heading = Theme.of(context).textTheme.titleSmall?.copyWith(
+      color: _foregroundColor,
+      fontWeight: FontWeight.w600,
+    );
+    final caption = Theme.of(context).textTheme.bodySmall?.copyWith(
+      color: _highContrast ? _foregroundColor : _captionColor,
+    );
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        foregroundColor: const Color(0xFF202633),
+        backgroundColor: Colors.white,
+        foregroundColor: _foregroundColor,
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         centerTitle: true,
-        leading: BackButton(onPressed: () => AppNavigator.pop(context)),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_ios),
+            onPressed: () => AppNavigator.pop(context),
+          ),
         title: Text(
           _strings.feedbackTitle,
           style: heading?.copyWith(fontSize: 17),
@@ -191,32 +205,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   const SizedBox(height: 22),
                   Text(_strings.feedbackLabel, style: heading),
                   const SizedBox(height: 10),
-                  TextField(
-                    controller: _feedbackController,
-                    minLines: 4,
-                    maxLines: 4,
-                    maxLength: _feedbackLimit,
-                    keyboardType: TextInputType.multiline,
-                    textInputAction: TextInputAction.newline,
-                    decoration: _inputDecoration(_strings.feedbackHint),
-                    buildCounter:
-                        (
-                          _, {
-                          required currentLength,
-                          required isFocused,
-                          maxLength,
-                        }) {
-                          final remaining = (_feedbackLimit - currentLength)
-                              .clamp(0, _feedbackLimit);
-                          return Text(
-                            '$remaining/$_feedbackLimit',
-                            style: caption,
-                            semanticsLabel: _strings.feedbackRemaining(
-                              remaining,
-                            ),
-                          );
-                        },
-                  ),
+                  _feedbackInput(caption),
                   const SizedBox(height: 18),
                   Text(_strings.feedbackAttachments, style: heading),
                   const SizedBox(height: 8),
@@ -234,9 +223,10 @@ class _FeedbackPageState extends State<FeedbackPage> {
                             tooltip: _strings.feedbackPickMedia,
                             onPressed: _loadingMedia ? null : _pickAttachments,
                             style: IconButton.styleFrom(
-                              backgroundColor: _fieldColor,
-                              disabledBackgroundColor: _fieldColor,
+                              backgroundColor: _controlSurface,
+                              disabledBackgroundColor: _controlSurface,
                               foregroundColor: _secondaryColor,
+                              side: _controlBorder,
                               shape: RoundedRectangleBorder(
                                 borderRadius: _borderRadius,
                               ),
@@ -246,7 +236,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                                     dimension: 22,
                                     child: CircularProgressIndicator(
                                       strokeWidth: 2,
-                                      color: _primaryColor,
+                                      color: _actionColor,
                                     ),
                                   )
                                 : const Icon(Icons.add),
@@ -262,6 +252,7 @@ class _FeedbackPageState extends State<FeedbackPage> {
                   const SizedBox(height: 10),
                   TextField(
                     controller: _contactController,
+                    style: const TextStyle(color: _foregroundColor),
                     autofillHints: const [AutofillHints.email],
                     textInputAction: TextInputAction.done,
                     decoration: _inputDecoration(_strings.feedbackContactHint),
@@ -285,9 +276,9 @@ class _FeedbackPageState extends State<FeedbackPage> {
                     return FilledButton(
                       onPressed: canSubmit ? _submit : null,
                       style: FilledButton.styleFrom(
-                        backgroundColor: _primaryColor,
+                        backgroundColor: _actionColor,
                         foregroundColor: Colors.white,
-                        disabledBackgroundColor: const Color(0xFFA5D7FA),
+                        disabledBackgroundColor: _disabledSubmit,
                         disabledForegroundColor: Colors.white,
                         minimumSize: const Size(0, 48),
                         shape: const RoundedRectangleBorder(
@@ -307,6 +298,52 @@ class _FeedbackPageState extends State<FeedbackPage> {
     );
   }
 
+  Widget _feedbackInput(TextStyle? caption) {
+    final counterHeight = MediaQuery.textScalerOf(
+      context,
+    ).scale(caption?.fontSize ?? 12);
+    return Stack(
+      children: [
+        TextField(
+          controller: _feedbackController,
+          style: const TextStyle(color: _foregroundColor),
+          minLines: 5,
+          maxLines: 5,
+          maxLength: _feedbackLimit,
+          keyboardType: TextInputType.multiline,
+          textInputAction: TextInputAction.newline,
+          decoration: _inputDecoration(_strings.feedbackHint).copyWith(
+            counterText: '',
+            contentPadding: EdgeInsets.fromLTRB(14, 14, 14, counterHeight + 20),
+          ),
+        ),
+        PositionedDirectional(
+          end: 12,
+          bottom: 12,
+          child: IgnorePointer(
+            child: ValueListenableBuilder<TextEditingValue>(
+              valueListenable: _feedbackController,
+              builder: (context, feedback, _) {
+                final remaining =
+                    (_feedbackLimit - feedback.text.characters.length).clamp(
+                      0,
+                      _feedbackLimit,
+                    );
+                return Text(
+                  '$remaining/$_feedbackLimit',
+                  style: caption?.copyWith(
+                    color: _highContrast ? _foregroundColor : _hintColor,
+                  ),
+                  semanticsLabel: _strings.feedbackRemaining(remaining),
+                );
+              },
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _ratingButton(int score) {
     final selected = _rating == score;
     return Semantics(
@@ -314,15 +351,11 @@ class _FeedbackPageState extends State<FeedbackPage> {
       child: OutlinedButton(
         onPressed: () => setState(() => _rating = score),
         style: OutlinedButton.styleFrom(
-          backgroundColor: selected ? const Color(0xFFD4EBFF) : _fieldColor,
+          backgroundColor: selected ? _selectedSurface : _controlSurface,
           foregroundColor: selected && !_highContrast
-              ? _primaryColor
+              ? _actionColor
               : _secondaryColor,
-          side: BorderSide(
-            color: selected
-                ? _primaryColor
-                : (_highContrast ? _secondaryColor : Colors.transparent),
-          ),
+          side: selected ? BorderSide(color: _actionColor) : _controlBorder,
           minimumSize: const Size(48, 48),
           padding: const EdgeInsets.symmetric(horizontal: 8),
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -346,12 +379,12 @@ class _FeedbackPageState extends State<FeedbackPage> {
             child: ClipRRect(
               borderRadius: _borderRadius,
               child: ColoredBox(
-                color: _fieldColor,
+                color: _controlSurface,
                 child: isVideo
-                    ? const Center(
+                    ? Center(
                         child: Icon(
                           Icons.videocam_outlined,
-                          color: _mutedColor,
+                          color: _secondaryColor,
                         ),
                       )
                     : Image.file(
@@ -359,10 +392,10 @@ class _FeedbackPageState extends State<FeedbackPage> {
                         fit: BoxFit.cover,
                         cacheWidth: 256,
                         semanticLabel: attachment.name,
-                        errorBuilder: (_, _, _) => const Center(
+                        errorBuilder: (_, _, _) => Center(
                           child: Icon(
                             Icons.broken_image_outlined,
-                            color: _mutedColor,
+                            color: _secondaryColor,
                           ),
                         ),
                       ),

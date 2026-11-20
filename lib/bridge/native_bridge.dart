@@ -54,7 +54,7 @@ class NativeBridge {
         final Map<String, dynamic> args = call.arguments is Map
             ? Map<String, dynamic>.from(call.arguments as Map)
             : <String, dynamic>{};
-        final String route = args['route'] as String? ?? AppRoutes.portInfo;
+        final String route = args['route'] as String? ?? AppRoutes.flutterDemo;
         final bool withContainer = args['withContainer'] as bool? ?? false;
         final Map<String, dynamic> params = args['params'] is Map
             ? Map<String, dynamic>.from(args['params'] as Map)
@@ -64,6 +64,7 @@ class NativeBridge {
           route,
           arguments: params,
           withContainer: withContainer,
+          inheritDevice: false,
         );
         return {'success': true};
       default:

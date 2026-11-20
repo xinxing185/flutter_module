@@ -15,7 +15,21 @@ final class AppDelegate: UIResponder, UIApplicationDelegate {
         window.rootViewController = navigation
         self.window = window
         window.makeKeyAndVisible()
-        let flutter = FlutterModuleHelper(application: application, navigation: navigation)
+        let flutter = FlutterModuleHelper(
+            application: application,
+            navigation: navigation,
+            readHostUiConfig: { [weak navigation] in
+                let traits = navigation?.visibleViewController?.traitCollection ?? navigation?.traitCollection
+                return HostUiConfig(
+                    localeTag: Locale.preferredLanguages.first ?? "en",
+                    // Flutter 按系统 Dynamic Type 缩放，MockHost 没有独立字号设置。
+                    fontScale: nil,
+                    highContrast: traits?.accessibilityContrast == .high,
+                    colorMode: traits?.userInterfaceStyle == .dark ? "dark" : "light"
+                )
+            },
+            openHostRoute: AppRouter.open
+        )
         self.flutter = flutter
         home.flutterModule = flutter
         return true

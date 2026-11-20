@@ -2,12 +2,14 @@
 class DevicePageParams {
   DevicePageParams._(this._values);
 
+  static const argumentKey = 'device';
+
   final Map<Object?, Object?> _values;
 
   Map<Object?, Object?> toMap() => _values;
 
   static DevicePageParams? fromRouteArguments(Object? arguments) {
-    final device = arguments is Map ? arguments['device'] : null;
+    final device = arguments is Map ? arguments[argumentKey] : null;
     return device is Map
         ? DevicePageParams._(Map<Object?, Object?>.unmodifiable(device))
         : null;

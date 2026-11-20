@@ -3,20 +3,22 @@ import 'package:flutter_boost/flutter_boost.dart';
 
 import '../common/pages/unknown_route_page.dart';
 import '../core/device_page_params.dart';
+import '../core/device_page_scope.dart';
 import '../features/feedback/feedback_page.dart';
-import '../features/port/port_info_page.dart';
-import '../features/port/port_settings_page.dart';
+import '../features/demo/flutter_demo_page.dart';
+import '../features/demo/device_api_test_page.dart';
 
 class AppRoutes {
   static const String root = '/';
   static const String unknown = 'unknown';
   static const String feedback = 'feedback';
-  static const String portInfo = 'portInfo';
-  static const String portSettings = 'portSettings';
+  static const String flutterDemo = 'flutterDemo';
+  static const String deviceApiTest = 'deviceApiTest';
 }
 
 class NativeRoutes {
   static const String test = 'native/test';
+  static const String deviceDetail = 'native/deviceDetail';
 }
 
 class AppRouter {
@@ -38,22 +40,15 @@ class AppRouter {
     AppRoutes.feedback: (settings, isContainerPage, uniqueId) {
       return _materialRoute(settings, (_) => const FeedbackPage());
     },
-    AppRoutes.portInfo: (settings, isContainerPage, uniqueId) {
+    AppRoutes.flutterDemo: (settings, isContainerPage, uniqueId) {
       final Map<String, dynamic> params = _argumentsAsMap(settings.arguments);
       return _materialRoute(
         settings,
-        (_) => PortInfoPage(source: params['source'] as String? ?? 'native'),
+        (_) => FlutterDemoPage(source: params['source'] as String? ?? 'native'),
       );
     },
-    AppRoutes.portSettings: (settings, isContainerPage, uniqueId) {
-      final Map<String, dynamic> params = _argumentsAsMap(settings.arguments);
-      return _materialRoute(
-        settings,
-        (_) => PortSettingsPage(
-          device: DevicePageParams.fromRouteArguments(params),
-          enableNotification: params['enableNotification'] as bool? ?? false,
-        ),
-      );
+    AppRoutes.deviceApiTest: (settings, isContainerPage, uniqueId) {
+      return _materialRoute(settings, (_) => const DeviceApiTestPage());
     },
   };
 
@@ -62,7 +57,13 @@ class AppRouter {
     bool isContainerPage,
     String? uniqueId,
   ) {
-    final FlutterBoostRouteFactory? routeFactory = _routerMap[settings.name];
+    // 旧版 Android 和 iOS 宿主仍可使用原来的路由名。
+    final routeName = switch (settings.name) {
+      'portInfo' => AppRoutes.flutterDemo,
+      'portSettings' => AppRoutes.deviceApiTest,
+      final name => name,
+    };
+    final FlutterBoostRouteFactory? routeFactory = _routerMap[routeName];
     if (routeFactory == null) {
       if (_isNativeRoute(settings.name)) {
         return null;
@@ -91,6 +92,15 @@ class AppRouter {
     RouteSettings settings,
     WidgetBuilder builder,
   ) {
-    return MaterialPageRoute<dynamic>(settings: settings, builder: builder);
+    final device = DevicePageParams.fromRouteArguments(settings.arguments);
+    return MaterialPageRoute<dynamic>(
+      settings: settings,
+      builder: device == null
+          ? builder
+          : (_) => DevicePageScope(
+              device: device,
+              child: Builder(builder: builder),
+            ),
+    );
   }
 }

@@ -123,7 +123,7 @@ class _MyAppState extends State<MyApp> {
     return FlutterBoostApp(
       AppRouter.routeFactory,
       appBuilder: _appBuilder,
-      initialRoute: AppRoutes.portInfo,
+      initialRoute: AppRoutes.flutterDemo,
     );
   }
 }
